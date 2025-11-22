@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Emoji Crate RNG Idle</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- TOP-LEFT HUD -->
+  <div class="hud">
+    <div class="hud-item">
+      <span class="hud-label">Best emoji:</span>
+      <span id="bestEmojiIcon" class="hud-emoji">—</span>
+      <span id="bestEmojiIncome" class="hud-income">(0 / sec)</span>
+    </div>
+    <div class="hud-item">
+      <span class="hud-label">Coins:</span>
+      <span id="coinAmount" class="hud-coins">0</span>
+    </div>
+    <div class="hud-item">
+      <button id="resetCoinsButton" class="reset-coins-btn">Reset Coins</button>
+    </div>
+  </div>
+
+  <!-- REBIRTH PANEL (TOP-LEFT AREA) -->
+  <div class="rebirth-panel">
+    <h3>Rebirth</h3>
+    <div class="rebirth-line">
+      Tokens: <span id="rebirthTokens">0</span>
+    </div>
+    <div class="rebirth-line">
+      Rebirths: <span id="rebirthCount">0</span>
+    </div>
+    <button id="rebirthButton" class="rebirth-btn">
+      Rebirth (1,000,000,000+ coins)
+    </button>
+    <div class="rebirth-shop-title">Rebirth Shop</div>
+    <button id="buyRebirthDivineButton" class="rebirth-shop-btn">
+      Buy 🎨 Divine (1 Token)
+    </button>
+    <button id="buyRebirthOmegaButton" class="rebirth-shop-btn">
+      Buy 🏯 Omega (10 Tokens)
+    </button>
+    <div id="rebirthStatus" class="rebirth-status">
+      Reach 1B coins to rebirth.
+    </div>
+  </div>
+
+  <!-- LEFT-SIDE ADMIN PANEL -->
+  <div class="admin-panel">
+    <h3>Admin</h3>
+    <div class="admin-note">Local cheats for testing</div>
+
+    <div class="admin-section">
+      <div class="admin-label">Give coins</div>
+      <button id="adminCoins1k" class="admin-btn">+1,000</button>
+      <button id="adminCoins10k" class="admin-btn">+10,000</button>
+      <button id="adminCoins100k" class="admin-btn">+100,000</button>
+      <button id="adminCoins1m" class="admin-btn">+1,000,000</button>
+      <button id="adminCoins100m" class="admin-btn">+100,000,000</button>
+      <button id="adminCoins10b" class="admin-btn">+10,000,000,000</button>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-label">Give emoji</div>
+      <select id="adminEmojiSelect" class="admin-select">
+        <!-- Common -->
+        <option value="smile">😃 Common (smile)</option>
+        <option value="grin">😁 Common (grin)</option>
+        <option value="blush">😊 Common (blush)</option>
+        <!-- Uncommon -->
+        <option value="happy">🙂 Uncommon (happy)</option>
+        <option value="wink">😉 Uncommon (wink)</option>
+        <option value="tongue">😛 Uncommon (tongue)</option>
+        <!-- Rare -->
+        <option value="cool">😎 Rare (cool)</option>
+        <option value="cowboy">🤠 Rare (cowboy)</option>
+        <option value="smirk">😏 Rare (smirk)</option>
+        <!-- Epic -->
+        <option value="mind">🤯 Epic (mind)</option>
+        <option value="robot">🤖 Epic (robot)</option>
+        <option value="angel">😇 Epic (angel)</option>
+        <!-- Legendary -->
+        <option value="dragon">🐉 Legendary (dragon)</option>
+        <option value="phoenix">🐲 Legendary (phoenix)</option>
+        <option value="unicorn">🦄 Legendary (unicorn)</option>
+        <!-- Mythic -->
+        <option value="star">🌟 Mythic (star)</option>
+        <option value="crystal">🔮 Mythic (crystal)</option>
+        <option value="nazar">🧿 Mythic (nazar)</option>
+        <!-- Divine -->
+        <option value="cash">💸 Divine (cash)</option>
+        <option value="dice">🎲 Divine (dice)</option>
+        <option value="paint">🎨 Divine (rebirth)</option>
+        <!-- Sacred / Prismatic / Evolved / Omega / Secret -->
+        <option value="sacred">☠️ Sacred</option>
+        <option value="bottle">🍾 Sacred</option>
+        <option value="jelly">🪼 Prismatic</option>
+        <option value="zombie">🧟 Prismatic</option>
+        <option value="evolved">🧬 Evolved</option>
+        <option value="omega">💰 Omega</option>
+        <option value="omegaTemple">🏯 Omega (rebirth)</option>
+        <option value="trophy">🏆 Secret</option>
+        <!-- Holiday / Feast -->
+        <option value="tree">🎄 Holiday (tree)</option>
+        <option value="snow">❄️ Holiday (snow)</option>
+        <option value="sock">🧦 Holiday (sock)</option>
+        <option value="bell">🔔 Holiday (bell)</option>
+        <option value="gift">🎁 Holiday (gift)</option>
+        <option value="reindeer">🦌 Holiday (reindeer)</option>
+        <option value="santa">🎅 Holiday (santa)</option>
+        <option value="turkeyLeg">🍗 Feast (turkey leg)</option>
+        <option value="turkey">🦃 Feast (turkey)</option>
+      </select>
+      <input
+        id="adminEmojiCount"
+        class="admin-input"
+        type="number"
+        min="1"
+        value="1"
+      />
+      <button id="adminGiveEmojiButton" class="admin-btn">Give</button>
+    </div>
+  </div>
+
+  <!-- RIGHT-SIDE MUTATION MENU -->
+  <div class="mutation-panel">
+    <h3>Mutations</h3>
+    <div id="mutationStatus" class="mutation-status">
+      Coin multiplier: 1.00×
+    </div>
+
+    <button id="mutSpark" class="mutation-btn">
+      ✨ Spark Mutation<br />
+      <span>+0.05× coins<br />Cost: 1,000</span>
+    </button>
+    <button id="mutRain" class="mutation-btn">
+      🌧️ Cloud Mutation<br />
+      <span>+0.10× coins<br />Cost: 5,000</span>
+    </button>
+    <button id="mutStorm" class="mutation-btn">
+      ⚡ Storm Mutation<br />
+      <span>+0.25× coins<br />Cost: 20,000</span>
+    </button>
+    <button id="mutPrism" class="mutation-btn">
+      🌈 Prism Mutation<br />
+      <span>+0.50× coins<br />Cost: 100,000</span>
+    </button>
+    <button id="mutGreed" class="mutation-btn">
+      💰 Greed Mutation<br />
+      <span>+0.30× coins<br />Cost: 50,000</span>
+    </button>
+    <button id="mutTime" class="mutation-btn">
+      ⏰ Time Warp Mutation<br />
+      <span>+0.70× coins<br />Cost: 200,000</span>
+    </button>
+    <button id="mutOmega" class="mutation-btn">
+      🧬 Omega Mutation<br />
+      <span>+1.00× coins<br />Cost: 1,000,000</span>
+    </button>
+    <button id="mutVoid" class="mutation-btn">
+      🕳️ Void Mutation<br />
+      <span>+1.50× coins<br />Cost: 5,000,000</span>
+    </button>
+    <button id="mutQuantum" class="mutation-btn">
+      ⚛️ Quantum Mutation<br />
+      <span>+2.00× coins<br />Cost: 20,000,000</span>
+    </button>
+    <button id="mutAscend" class="mutation-btn">
+      👑 Ascension Mutation<br />
+      <span>+3.00× coins<br />Cost: 100,000,000</span>
+    </button>
+    <button id="mutNova" class="mutation-btn">
+      🌌 Nova Mutation<br />
+      <span>+4.00× coins<br />Cost: 250,000,000</span>
+    </button>
+    <button id="mutRift" class="mutation-btn">
+      🌀 Rift Mutation<br />
+      <span>+5.00× coins<br />Cost: 500,000,000</span>
+    </button>
+  </div>
+
+  <!-- EMOJI DEALER (TRADING) -->
+  <div class="dealer-panel">
+    <h3>Emoji Dealer</h3>
+    <div class="dealer-note">
+      Trade 5 of a lower rarity for 1 random emoji of the next tier.
+    </div>
+    <select id="tradeTierSelect" class="dealer-select">
+      <option value="Common">Common → Uncommon</option>
+      <option value="Uncommon">Uncommon → Rare</option>
+      <option value="Rare">Rare → Epic</option>
+      <option value="Epic">Epic → Legendary</option>
+      <option value="Legendary">Legendary → Mythic</option>
+      <option value="Mythic">Mythic → Divine</option>
+      <option value="Divine">Divine → Sacred</option>
+      <option value="Sacred">Sacred → Prismatic</option>
+      <option value="Prismatic">Prismatic → Evolved</option>
+      <option value="Evolved">Evolved → Omega</option>
+    </select>
+    <button id="tradeButton" class="dealer-btn">Trade</button>
+    <div id="dealerStatus" class="dealer-status">
+      Select a tier and trade.
+    </div>
+  </div>
+
+  <div class="game-container">
+    <h1>🎁 Emoji Crate RNG Idle</h1>
+    <p>
+      Click a crate to roll emojis. Your best emoji earns coins per second. You can
+      sell emojis for coins, flip coins, buy upgrades, mutations, trade, and rebirth.
+    </p>
+
+    <!-- Crate selection -->
+    <div class="crate-select">
+      <button class="crate-option active" data-crate="basic">
+        Basic Crate<br />
+        <span class="crate-cost">Cost: 0</span>
+      </button>
+      <button class="crate-option" data-crate="advanced">
+        Advanced Crate<br />
+        <span class="crate-cost">Cost: 500</span>
+      </button>
+      <button class="crate-option" data-crate="elite">
+        Elite Crate<br />
+        <span class="crate-cost">Cost: 5,000</span>
+      </button>
+      <button class="crate-option" data-crate="omega">
+        Omega Crate<br />
+        <span class="crate-cost">Cost: 50,000</span>
+      </button>
+      <button class="crate-option christmas-option" data-crate="christmas">
+        🎄 Holiday Crate<br />
+        <span class="crate-cost">Cost: 15,000</span>
+      </button>
+    </div>
+
+    <div id="crate" class="crate">
+      <span class="crate-label">OPEN</span>
+    </div>
+
+    <div class="result">
+      <div id="emojiDisplay" class="emoji-display">❔</div>
+      <div id="rarityDisplay" class="rarity-display">Roll to get an emoji!</div>
+      <div id="rollCount" class="roll-count">Rolls: 0</div>
+    </div>
+
+    <button id="rollButton" class="roll-button">
+      Open Selected Crate
+    </button>
+
+    <!-- Upgrades -->
+    <h2>Upgrades</h2>
+    <button id="doubleCoinsButton" class="upgrade-button">
+      2x Coins (Cost: 25,000)
+    </button>
+
+    <h2>Rarities & Income</h2>
+    <div class="rarity-list">
+      <div class="rarity-item common">
+        😃 😁 😊 <span>Common — 1 / sec</span>
+      </div>
+      <div class="rarity-item uncommon">
+        🙂 😉 😛 <span>Uncommon — 2 / sec</span>
+      </div>
+      <div class="rarity-item rare">
+        😎 🤠 😏 <span>Rare — 5 / sec</span>
+      </div>
+      <div class="rarity-item epic">
+        🤯 🤖 😇 <span>Epic — 15 / sec</span>
+      </div>
+      <div class="rarity-item secret">
+        🐉 🐲 🦄 <span>Legendary — 40 / sec</span>
+      </div>
+      <div class="rarity-item secret">
+        🌟 🔮 🧿 <span>Mythic — 75 / sec</span>
+      </div>
+      <div class="rarity-item secret">
+        💸 🎲 <span class="rarity-divine">Divine — 300 / sec</span>
+      </div>
+      <div class="rarity-item sacred-row">
+        ☠️ 🍾 <span class="rarity-sacred">Sacred — 400 / sec</span>
+      </div>
+      <div class="rarity-item prismatic-row">
+        🪼 🧟 <span class="rarity-prismatic">Prismatic — 1,000 / sec</span>
+      </div>
+      <div class="rarity-item evolved-row">
+        🧬 <span class="rarity-evolved">Evolved — 7,500 / sec</span>
+      </div>
+      <div class="rarity-item omega-row">
+        💰 <span class="rarity-omega">Omega — 15,000 / sec</span>
+      </div>
+      <div class="rarity-item secret">
+  🏆 <span class="rarity-secret"><strong>Secret</strong> — 111,111 / sec</span>
+</div>
+    </div>
+
+    <h2>Rebirth Items</h2>
+    <div class="rarity-list">
+      <div class="rarity-item rebirth-row">
+        🎨 <span class="rarity-divine">Rebirth Divine — 300 / sec</span>
+      </div>
+      <div class="rarity-item rebirth-row">
+        🏯 <span class="rarity-omega">Rebirth Omega — 22,000 / sec</span>
+      </div>
+    </div>
+
+    <h2>Limited</h2>
+    <div class="rarity-list limited-list">
+      <div class="rarity-item limited-row christmas-row">
+        🎄 🎁 ❄️ 🔔 🧦 🦌 🎅
+        <span class="rarity-christmas">Holiday — up to 5,000 / sec</span>
+      </div>
+      <div class="rarity-item limited-row turkey-row">
+        🍗 🦃
+        <span class="rarity-turkey">Feast — up to 2,000 / sec</span>
+      </div>
+    </div>
+
+    <h2>Your Inventory</h2>
+    <div id="inventoryList" class="inventory-list">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
